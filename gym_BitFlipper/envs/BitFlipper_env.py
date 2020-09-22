@@ -15,7 +15,7 @@ class BitFlipperEnv(gym.Env):
     def __init__(self,n=10,space_seed=0):
         self.n=n        
         self.action_space = spaces.Discrete(self.n +1) #there is an option NOT to flip any bit( index = n)
-        self.observation_space = spaces.MultiBinary(self.n * 2)
+        self.observation_space = spaces.MultiBinary(self.n)
         self.state_space = spaces.MultiBinary(self.n)
         self.reward_range = (-1,0)
         spaces.seed(space_seed)
@@ -53,7 +53,7 @@ class BitFlipperEnv(gym.Env):
         # Uncomment for fixing state-goal
         # spaces.seed(seed)
         self.initial_state = self.sample_state()
-        self.goal = self.sample_state()
+        #self.goal = self.sample_state()
         self.state = self.initial_state
         self.reward_max = -np.sum(np.bitwise_xor(self.initial_state,self.goal))+1
         if(np.array_equal(self.goal,self.initial_state)):
@@ -92,8 +92,9 @@ class BitFlipperEnv(gym.Env):
             return False
     
 class GoalBitFlipperEnv(BitFlipperEnv):
-    def __init__(self, n=10, space_seed=0):
+    def __init__(self, n=80, space_seed=None):
         super().__init__(n, space_seed)
+        self.observation_space = spaces.MultiBinary(self.n*2)
     
     def step(self, action):
         obs, reward, done, info = super().step(action)
